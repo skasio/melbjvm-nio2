@@ -6,6 +6,9 @@ import org.slf4j.LoggerFactory;
 import java.io.IOException;
 import java.nio.file.*;
 
+/**
+ * @author Szymon Szukalski [szymon.szukalski@gmail.com]
+ */
 public class Watcher {
 
     private static final Logger LOG = LoggerFactory.getLogger(Watcher.class);
@@ -35,15 +38,15 @@ public class Watcher {
                     final WatchEvent<Path> watchEventPath = (WatchEvent<Path>) watchEvent;
                     Path newFile = watchedPath.resolve(watchEventPath.context());
 
-                    if (kind == StandardWatchEventKinds.ENTRY_MODIFY) {
-                        new FileReader(newFile);
+                    if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
+                        new AsynchronousFileReader(newFile);
                     }
                 }
 
-                //reset the key
+                // reset the key
                 boolean valid = key.reset();
 
-                //exit loop if the key is not valid (if the directory was deleted, for example)
+                // exit loop if the key is not valid (if the directory was deleted, for example)
                 if (!valid) {
                     break;
                 }

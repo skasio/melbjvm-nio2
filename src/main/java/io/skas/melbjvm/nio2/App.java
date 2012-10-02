@@ -7,28 +7,29 @@ import java.io.IOException;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 
+/**
+ * @author Szymon Szukalski [szymon.szukalski@gmail.com]
+ */
 public class App {
 
     public static final Logger LOG = LoggerFactory.getLogger(App.class);
 
     public static void main(String[] args) throws IOException {
 
-        final Path path = Paths.get("/tmp/doit");
+        final Path path = Paths.get("/tmp", "doit");
+
+        Nio2MetaDataLoggingUtils.logFileStoreAttributes(path);
+        Nio2MetaDataLoggingUtils.logBasicFileAttributes(path);
+        Nio2MetaDataLoggingUtils.logDosFileAttributes(path);
+        Nio2MetaDataLoggingUtils.logPosixFileAttributes(path);
+        Nio2MetaDataLoggingUtils.logFileOwnerAttributes(path);
 
         Watcher watcher = new Watcher();
 
         try {
-            Nio2MetaDataLoggingUtils.logFileStoreAttributes(path);
-            Nio2MetaDataLoggingUtils.logBasicFileAttributes(path);
-            Nio2MetaDataLoggingUtils.logDosFileAttributes(path);
-            Nio2MetaDataLoggingUtils.logPosixFileAttributes(path);
-            Nio2MetaDataLoggingUtils.logFileOwnerAttributes(path);
-
             watcher.watchDirectory(path);
-
         } catch (IOException | InterruptedException ex) {
             LOG.error(ex.getMessage());
         }
     }
-
 }

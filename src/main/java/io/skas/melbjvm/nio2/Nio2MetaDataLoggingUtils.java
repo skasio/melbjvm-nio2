@@ -10,6 +10,9 @@ import java.nio.file.Path;
 import java.nio.file.attribute.*;
 import java.util.Set;
 
+/**
+ * @author Szymon Szukalski [szymon.szukalski@gmail.com]
+ */
 public class Nio2MetaDataLoggingUtils {
 
     public static final Logger LOG = LoggerFactory.getLogger(Nio2MetaDataLoggingUtils.class);
@@ -18,8 +21,6 @@ public class Nio2MetaDataLoggingUtils {
 
     public static final String BASIC_VIEW = "basic";
     public static final String OWNER_VIEW = "owner";
-    public static final String USER_VIEW = "user";
-    public static final String UNIX_VIEW = "unix";
     public static final String DOS_VIEW = "dos";
     public static final String POSIX_VIEW = "posix";
 
@@ -30,7 +31,6 @@ public class Nio2MetaDataLoggingUtils {
             BasicFileAttributes basicFileAttributes = Files.readAttributes(path, BasicFileAttributes.class);
 
             LOG.info("Basic file attributes for path [{}]", path);
-
             LOG.info("  isDirectory?     {}", basicFileAttributes.isDirectory());
             LOG.info("  isOther?         {}", basicFileAttributes.isOther());
             LOG.info("  isRegularFile?   {}", basicFileAttributes.isRegularFile());
@@ -88,11 +88,9 @@ public class Nio2MetaDataLoggingUtils {
 
     public static void logFileOwnerAttributes(Path path) throws IOException {
         final FileStore fileStore = Files.getFileStore(path);
-
         if (fileStore.supportsFileAttributeView(OWNER_VIEW)) {
             final FileOwnerAttributeView fileAttributeView = Files.getFileAttributeView(path, FileOwnerAttributeView.class);
             LOG.info("Owner file attributes for path [{}]", path);
-
             LOG.info("  principal:  {}", fileAttributeView.getOwner());
 
         } else {
