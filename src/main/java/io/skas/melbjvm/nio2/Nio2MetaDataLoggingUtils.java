@@ -25,9 +25,11 @@ public class Nio2MetaDataLoggingUtils {
     public static final String POSIX_VIEW = "posix";
 
     public static void logBasicFileAttributes(Path path) throws IOException {
+
         final FileStore fileStore = Files.getFileStore(path);
 
         if (fileStore.supportsFileAttributeView(BASIC_VIEW)) {
+
             BasicFileAttributes basicFileAttributes = Files.readAttributes(path, BasicFileAttributes.class);
 
             LOG.info("Basic file attributes for path [{}]", path);
@@ -35,15 +37,21 @@ public class Nio2MetaDataLoggingUtils {
             LOG.info("  isOther?         {}", basicFileAttributes.isOther());
             LOG.info("  isRegularFile?   {}", basicFileAttributes.isRegularFile());
             LOG.info("  isSymbolicLink?  {}", basicFileAttributes.isSymbolicLink());
+
         } else {
+
             LOG.info("the file store in which [{}] resides doesn't support the [{}] file attribute view", path, BASIC_VIEW);
+
         }
+
     }
 
     public static void logDosFileAttributes(Path path) throws IOException {
+
         final FileStore fileStore = Files.getFileStore(path);
 
         if (fileStore.supportsFileAttributeView(DOS_VIEW)) {
+
             DosFileAttributes dosFileAttributes = Files.readAttributes(path, DosFileAttributes.class);
 
             LOG.info("Dos file attributes for path [{}]", path);
@@ -52,15 +60,21 @@ public class Nio2MetaDataLoggingUtils {
             LOG.info("  isHidden?    {}", dosFileAttributes.isHidden());
             LOG.info("  isReadOnly?  {}", dosFileAttributes.isReadOnly());
             LOG.info("  isSystem?    {}", dosFileAttributes.isSystem());
+
         } else {
+
             LOG.info("the file store in which [{}] resides doesn't support the [{}] file attribute view", path, DOS_VIEW);
+
         }
+
     }
 
     public static void logPosixFileAttributes(Path path) throws IOException {
+
         final FileStore fileStore = Files.getFileStore(path);
 
         if (fileStore.supportsFileAttributeView(POSIX_VIEW)) {
+
             PosixFileAttributes posixFileAttributes = Files.readAttributes(path, PosixFileAttributes.class);
 
             final Set<PosixFilePermission> permissions = posixFileAttributes.permissions();
@@ -81,24 +95,33 @@ public class Nio2MetaDataLoggingUtils {
                     (permissions.contains(PosixFilePermission.OTHERS_READ) ? "r" : "-") +
                             (permissions.contains(PosixFilePermission.OTHERS_WRITE) ? "w" : "-") +
                             (permissions.contains(PosixFilePermission.OTHERS_EXECUTE) ? "x" : "-"));
+
         } else {
+
             LOG.info("the file store in which [{}] resides doesn't support the [{}] file attribute view", path, POSIX_VIEW);
+
         }
     }
 
     public static void logFileOwnerAttributes(Path path) throws IOException {
+
         final FileStore fileStore = Files.getFileStore(path);
+
         if (fileStore.supportsFileAttributeView(OWNER_VIEW)) {
+
             final FileOwnerAttributeView fileAttributeView = Files.getFileAttributeView(path, FileOwnerAttributeView.class);
             LOG.info("Owner file attributes for path [{}]", path);
             LOG.info("  principal:  {}", fileAttributeView.getOwner());
 
         } else {
+
             LOG.info("the file store in which [{}] resides doesn't support the [{}] file attribute view", path, OWNER_VIEW);
+
         }
     }
 
     public static void logFileStoreAttributes(Path path) throws IOException {
+
         final FileStore fileStore = Files.getFileStore(path);
 
         LOG.info("File store attributes for path [{}]", path);
@@ -108,6 +131,7 @@ public class Nio2MetaDataLoggingUtils {
         LOG.info("  total space:        {}", fileStore.getTotalSpace() / BYTES_IN_MEGABYTE);
         LOG.info("  total unallocated:  {}", fileStore.getUnallocatedSpace() / BYTES_IN_MEGABYTE);
         LOG.info("  total space:        {}", fileStore.getUsableSpace() / BYTES_IN_MEGABYTE);
+
     }
 
 }

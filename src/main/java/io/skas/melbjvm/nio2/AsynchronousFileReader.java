@@ -18,7 +18,6 @@ public class AsynchronousFileReader implements CompletionHandler<Integer, ByteBu
     public static final Logger LOG = LoggerFactory.getLogger(AsynchronousFileReader.class);
     public static final int BYTES_IN_MEGABYTE = 1048576;
 
-
     private Long position;
     private Path path;
     private ByteBuffer buffer;
@@ -36,31 +35,41 @@ public class AsynchronousFileReader implements CompletionHandler<Integer, ByteBu
     }
 
     private void openChannel() {
+
         try {
             this.asynchronousFileChannel = AsynchronousFileChannel.open(path, StandardOpenOption.READ);
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private void closeChannel() {
+
         try {
             this.asynchronousFileChannel.close();
         } catch (IOException e) {
             e.printStackTrace();
         }
+
     }
 
     private void readChannel(long position) {
+
         asynchronousFileChannel.read(buffer, position, buffer, this);
+
     }
 
     @Override
     public void completed(Integer result, ByteBuffer buffer) {
+
         if (result < 0) {
+
             closeChannel();
             LOG.debug("read: {} megabytes", position / BYTES_IN_MEGABYTE);
+
         } else {
+
             position += result;
             if (buffer.hasRemaining()) {
                 readChannel(position);
@@ -70,12 +79,16 @@ public class AsynchronousFileReader implements CompletionHandler<Integer, ByteBu
                 buffer.clear();
                 this.readChannel(position);
             }
+
         }
+
     }
 
     @Override
     public void failed(Throwable exc, ByteBuffer buffer) {
+
         LOG.error("read failed: {}", exc.getMessage());
         exc.printStackTrace();
+
     }
 }

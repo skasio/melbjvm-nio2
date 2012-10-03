@@ -13,11 +13,12 @@ public class Watcher {
 
     private static final Logger LOG = LoggerFactory.getLogger(Watcher.class);
 
-    public void watchDirectory(Path watchedPath) throws IOException, InterruptedException {
+    public void watchDirectory(Path directory) throws IOException, InterruptedException {
 
+        // New try with resources
         try (WatchService watchService = FileSystems.getDefault().newWatchService()) {
 
-            final WatchKey key = watchedPath.register(
+            final WatchKey key = directory.register(
                     watchService,
                     StandardWatchEventKinds.ENTRY_CREATE,
                     StandardWatchEventKinds.ENTRY_MODIFY,
@@ -25,21 +26,29 @@ public class Watcher {
 
             while (true) {
 
+                // retrieve and remove the next watch key (waits)
                 watchService.take();
 
+                // get list of events for the key
                 for (WatchEvent<?> watchEvent : key.pollEvents()) {
+
+                    // get the event kind
                     final WatchEvent.Kind<?> kind = watchEvent.kind();
+
+                    // get the filename for the event
+                    final WatchEvent<Path> watchEventPath = (WatchEvent<Path>) watchEvent;
+                    final Path filename = watchEventPath.context();
+
+                    LOG.debug("event: {} filename: {}", kind, filename);
 
                     // handle OVERFLOW event
                     if (kind == StandardWatchEventKinds.OVERFLOW) {
                         continue;
                     }
 
-                    final WatchEvent<Path> watchEventPath = (WatchEvent<Path>) watchEvent;
-                    Path newFile = watchedPath.resolve(watchEventPath.context());
-
+                    // handle CREATE event
                     if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
-                        new AsynchronousFileReader(newFile);
+                        new AsynchronousFileReader(filename);
                     }
                 }
 
