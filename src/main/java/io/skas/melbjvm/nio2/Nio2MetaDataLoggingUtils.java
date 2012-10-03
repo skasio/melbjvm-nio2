@@ -11,8 +11,6 @@ import java.nio.file.Path;
 import java.nio.file.attribute.*;
 import java.util.Set;
 
-import static com.sun.deploy.util.StringUtils.join;
-
 /**
  * @author Szymon Szukalski [szymon.szukalski@gmail.com]
  */
@@ -33,8 +31,10 @@ public class Nio2MetaDataLoggingUtils {
         final Set<String> supportedViews = fileSystem.supportedFileAttributeViews();
 
         LOG.info("File Attribute Views supported by the FileSystem that created {}", path);
-        LOG.info("  {}", join(supportedViews, ", "));
-
+        for (String supportedView : supportedViews) {
+            LOG.info("  {}", supportedView);
+        }
+        
     }
 
     public static void logBasicFileAttributes(Path path) throws IOException {
