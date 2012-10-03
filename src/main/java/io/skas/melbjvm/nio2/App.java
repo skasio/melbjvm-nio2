@@ -18,10 +18,17 @@ public class App {
 
     public static void main(String[] args) throws IOException {
 
-        final Path path = Paths.get("/tmp", "monkeys");
+        final Path path;
+
+        if (args.length > 0) {
+            path = Paths.get(args[0]);
+        } else {
+            path = Paths.get(System.getProperty("java.io.tmpdir"));
+        }
 
         if (Files.exists(path, LinkOption.NOFOLLOW_LINKS)) {
 
+            Nio2MetaDataLoggingUtils.logSupportedViews(path);
             Nio2MetaDataLoggingUtils.logFileStoreAttributes(path);
             Nio2MetaDataLoggingUtils.logBasicFileAttributes(path);
             Nio2MetaDataLoggingUtils.logDosFileAttributes(path);

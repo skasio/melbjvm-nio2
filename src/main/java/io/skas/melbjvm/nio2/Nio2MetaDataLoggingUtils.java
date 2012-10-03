@@ -5,10 +5,13 @@ import org.slf4j.LoggerFactory;
 
 import java.io.IOException;
 import java.nio.file.FileStore;
+import java.nio.file.FileSystem;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.attribute.*;
 import java.util.Set;
+
+import static com.sun.deploy.util.StringUtils.join;
 
 /**
  * @author Szymon Szukalski [szymon.szukalski@gmail.com]
@@ -23,6 +26,16 @@ public class Nio2MetaDataLoggingUtils {
     public static final String OWNER_VIEW = "owner";
     public static final String DOS_VIEW = "dos";
     public static final String POSIX_VIEW = "posix";
+
+    public static void logSupportedViews(Path path) {
+
+        final FileSystem fileSystem = path.getFileSystem();
+        final Set<String> supportedViews = fileSystem.supportedFileAttributeViews();
+
+        LOG.info("File Attribute Views supported by the FileSystem that created {}", path);
+        LOG.info("  {}", join(supportedViews, ", "));
+
+    }
 
     public static void logBasicFileAttributes(Path path) throws IOException {
 
