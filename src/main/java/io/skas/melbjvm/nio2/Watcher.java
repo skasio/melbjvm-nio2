@@ -48,7 +48,7 @@ public class Watcher {
 
                     // handle CREATE event
                     if (kind == StandardWatchEventKinds.ENTRY_CREATE) {
-                        new AsynchronousFileReader(filename);
+                        new AsynchronousFileReader(directory.resolve(filename));
                     }
                 }
 
